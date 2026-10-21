@@ -1,4 +1,5 @@
 services:
+  #  База данных PostgreSQL 
   postgres:
     image: postgres:16-alpine
     container_name: auction-postgres
@@ -7,7 +8,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-auction_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-auction_secret_pass}
       POSTGRES_DB: ${POSTGRES_DB:-auction_db}
-    
     ports:
       - "5432:5432"
     volumes:
@@ -21,6 +21,7 @@ services:
       retries: 5
       start_period: 10s
 
+  # Основной gRPC-бэкенд 
   app:
     build:
       context: .
@@ -31,10 +32,26 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "${APP_PORT:-8080}:8080"
+      - "50051:50051"
     environment:
-      APP_PORT: "8080"
+      GRPC_PORT: "50051"
+      LOG_LEVEL: "debug"
       DATABASE_URL: "postgres://${POSTGRES_USER:-auction_user}:${POSTGRES_PASSWORD:-auction_secret_pass}@postgres:5432/${POSTGRES_DB:-auction_db}?sslmode=disable"
+    networks:
+      - auction-network
+
+  # Web-интерфейс для интерактивного тестирования gRPC 
+  grpcui:
+    image: fullstorydev/grpcui:latest
+    container_name: auction-grpcui
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "8080:8080" 
+    command:
+      - -plaintext
+      - app:50051
     networks:
       - auction-network
 
