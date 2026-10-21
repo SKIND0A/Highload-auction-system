@@ -17,7 +17,6 @@ RUN apk add --no-cache ca-certificates tzdata && \
 
 COPY --chown=appuser:appuser --from=builder /app/bin/auction /app/auction
 COPY --chown=appuser:appuser --from=builder /app/migrations /app/migrations
-COPY --chown=appuser:appuser --from=builder /app/web /app/web
 
 USER appuser
 EXPOSE 8080
