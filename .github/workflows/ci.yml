@@ -37,13 +37,15 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.26.4'
+          go-version: '1.23.0'
           cache: true
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
+          version: v1.64
+          skip-pkg-cache: true
+          skip-build-cache: true
 
       - name: Install goose for DB migrations
         run: go install github.com/pressly/goose/v3/cmd/goose@latest
