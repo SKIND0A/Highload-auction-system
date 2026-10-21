@@ -47,11 +47,6 @@ jobs:
           skip-pkg-cache: true
           skip-build-cache: true
 
-      - name: Install goose for DB migrations
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/pressly/goose/master/install.sh | sh -s -- -b /home/runner/go/bin
-          echo "/home/runner/go/bin" >> $GITHUB_PATH
-
       - name: Run database migrations
         run: goose -dir ./migrations postgres "$DATABASE_URL" up
 
