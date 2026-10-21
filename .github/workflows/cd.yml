@@ -9,8 +9,8 @@ permissions:
   packages: write
 
 jobs:
-  build-and-push-image:
-    name: Build & Push Docker Image
+  build-and-deploy:
+    name: Build, Publish and Deploy
     runs-on: self-hosted
 
     steps:
@@ -33,10 +33,16 @@ jobs:
             type=sha,prefix=release-
             type=raw,value=latest
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image to GHCR
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy application on host
+        run: |
+          docker compose pull app || docker compose build
+          docker compose up -d --remove-orphans
+          docker image prune -f

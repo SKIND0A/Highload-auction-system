@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint-and-test:
-    name: lint-and-test
+    name: Lint & Run Tests
     runs-on: self-hosted
 
     services:
@@ -19,7 +19,7 @@ jobs:
           POSTGRES_PASSWORD: auction_password
           POSTGRES_DB: auction_test_db
         ports:
-          - 5432:5432
+          - 5433:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 5s
@@ -27,7 +27,7 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: "postgres://auction_user:auction_password@localhost:5432/auction_test_db?sslmode=disable"
+      DATABASE_URL: "postgres://auction_user:auction_password@localhost:5433/auction_test_db?sslmode=disable"
       JWT_SECRET: "ci-test-secret-key"
 
     steps:
