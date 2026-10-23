@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"github.com/SKIND0A/Highload-auction-system/internal/pkg/logger"
+)
 
 func main() {
-    fmt.Println("Highload auction system initialized")
+    //initialization logger
+	logger.Init()
 }
